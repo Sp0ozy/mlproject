@@ -28,12 +28,20 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params,n_iter=25):
             param_grid = params.get(name)
 
             if param_grid:
-                gs = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=n_iter, cv=3, n_jobs=-1, verbose=1, random_state=42)
+                gs = RandomizedSearchCV(
+                    estimator=model,
+                    param_distributions=param_grid,
+                    n_iter=n_iter,
+                    cv=3, 
+                    n_jobs=-1,
+                    verbose=1,
+                    random_state=42                                        
+                )    
                 gs.fit(X_train, y_train)
                 best_model = gs.best_estimator_
             else:
                 best_model = model.fit(X_train, y_train)
-                
+
             y_pred = best_model.predict(X_test)
 
             report[name] = {
