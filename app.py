@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask,request, render_template
 import numpy as np
 import pandas as pd
 
@@ -10,3 +10,12 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/predictdata', methods=['GET','POST'])
+def predict_datapoint():
+    if request.method == 'GET':
+        try:
+           return render_template('home.html')
+        except Exception as e:
+            return render_template('index.html', error_message=str(e))
+    else:
+        pass
