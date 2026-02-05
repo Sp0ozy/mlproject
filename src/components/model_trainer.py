@@ -9,9 +9,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 from xgboost import XGBRegressor
 
-
-from sklearn.metrics import r2_score
-
 from src.logger import logging
 from src.exception import CustomException
 
@@ -75,13 +72,16 @@ class ModelTrainer:
 
               "Ridge Regression": {
                 "alpha": [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100],
-                "solver": ["auto"]
+                "solver": ["auto"],
+                "max_iter": [5000],
+                "tol":[1e-3]
               },
 
               "Lasso Regression": {
                 "alpha": [1e-4, 3e-4, 1e-3, 3e-3, 1e-2, 3e-2, 1e-1, 0.3, 1.0],
                 "selection": ["cyclic", "random"],
-                "max_iter": [5000, 10000]
+                "max_iter": [5000],
+                "tol":[1e-3]
               },
 
               "SVR": {
@@ -120,13 +120,19 @@ class ModelTrainer:
             model_report: dict = evaluate_model(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models, params=params)
             
             best_model_name = max(model_report, key=lambda x: model_report[x]["r2_score"])
+            r2_score = model_report[best_model_name]["r2_score"]
+            cv_score = model_report[best_model_name]["cv_score"]
 
             if model_report[best_model_name]["r2_score"] < 0.6:
                 raise CustomException("No best model found with r2 score greater than 0.6", sys)
             
+            if cv_score is not None and (cv_score - r2_score) > 0.1:
+                    logging.warning( f"Possible overfitting: CV={cv_score:.3f}, r2_score={r2_score:.3f}")
+            
             best_model = model_report[best_model_name]["model"]
             
             logging.info(f"Best model found: {best_model_name} with r2 score: {model_report[best_model_name]['r2_score']}")
+
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,

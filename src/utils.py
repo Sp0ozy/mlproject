@@ -39,14 +39,16 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params,n_iter=25):
                 )    
                 gs.fit(X_train, y_train)
                 best_model = gs.best_estimator_
+                cv_score = gs.best_score_
             else:
                 best_model = model.fit(X_train, y_train)
-
+                cv_score = None
             y_pred = best_model.predict(X_test)
 
             report[name] = {
                 "model": best_model,
-                "r2_score": r2_score(y_test, y_pred)
+                "r2_score": r2_score(y_test, y_pred),
+                "cv_score": cv_score
             }
 
         return report
