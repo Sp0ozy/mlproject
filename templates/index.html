@@ -1,1 +1,38 @@
-<h1>Welcome to the ML Project</h1>
+<!DOCTYPE html>
+<html lang="en">
+<!--AI generated UI  -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Project - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">ML Project</div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-btn">Home</a>
+            <a href="{{ url_for('predict_datapoint') }}" class="nav-btn">Predict</a>
+        </div>
+    </nav>
+    
+    <div class="container welcome-container">
+        <h1>Welcome to the ML Project</h1>
+        <p>Advanced Machine Learning powered Student Performance Prediction System</p>
+        
+        <div class="feature-box">
+            <h3>What Project Offer:</h3>
+            <ul>
+                <li>Accurate prediction of student math scores</li>
+                <li>Analysis based on multiple demographic and academic factors</li>
+                <li>Easy-to-use interface for quick predictions</li>
+                <li>Data-driven insights for educational planning</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 40px;">
+            <a href="{{ url_for('predict_datapoint') }}" class="nav-btn" style="display: inline-block; padding: 15px 40px; font-size: 18px;">Start Prediction</a>
+        </div>
+    </div>
+</body>
+</html>

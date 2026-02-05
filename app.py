@@ -12,7 +12,7 @@ def index():
 def predict_datapoint():
     if request.method == 'GET':
         try:
-           return render_template('home.html')
+           return render_template('predict.html')
         except Exception as e:
             return render_template('index.html', error_message=str(e))
     else:
@@ -29,7 +29,7 @@ def predict_datapoint():
         print(pred_df)
         predict_pipeline = PredictPipeline()
         results = predict_pipeline.predict(pred_df)
-        return render_template('home.html', results=results[0])
+        return render_template('predict.html', results=results[0])
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
