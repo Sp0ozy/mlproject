@@ -8,6 +8,25 @@ class PredictPipeline:
     def __init__(self):
         pass
 
+    def predict(self, features):
+        try:
+            model_path = 'artifacts/model.pkl'
+            preprocessor_path = 'artifacts/preprocessor.pkl'
+            logging.info("Loading preprocessor and model")
+
+            preprocessor = load_object(preprocessor_path)
+            model = load_object(model_path)
+            logging.info("Preprocessor and model loaded successfully")
+
+            data_scaled = preprocessor.transform(features)
+            prediction = model.predict(data_scaled)
+            logging.info(f"Prediction completed successfully. Prediction: {prediction}")
+            return prediction
+        
+        except Exception as e:
+            logging.error("Error in prediction")
+            raise CustomException(e, sys)
+
 class CustomData:
     def __init__(self,
             gender: str,
