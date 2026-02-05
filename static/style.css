@@ -188,7 +188,7 @@ select.form-control {
 }
 
 input[type="number"].form-control {
-    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
