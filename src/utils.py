@@ -2,6 +2,8 @@ import os
 import sys
 
 import dill
+# from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import r2_score
 
 from src.logger import logging
@@ -19,20 +21,25 @@ def save_object(file_path, obj):
         logging.error("Error saving object")
         raise CustomException(e, sys)
     
-def evaluate_model(X_train, y_train, X_test, y_test, models):
+def evaluate_model(X_train, y_train, X_test, y_test, models, params,n_iter=25):
     try:
         report = {}
+        for name, model in models.items():
+            param_grid = params.get(name)
 
-        for i in range(len(models.values())):
-            models_name = list(models.values())[i]
+            if param_grid:
+                gs = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=n_iter, cv=3, n_jobs=-1, verbose=1, random_state=42)
+                gs.fit(X_train, y_train)
+                best_model = gs.best_estimator_
+            else:
+                best_model = model.fit(X_train, y_train)
+                
+            y_pred = best_model.predict(X_test)
 
-            models_name.fit(X_train, y_train)
-
-            y_test_pred = models_name.predict(X_test)
-
-            test_model_score = r2_score(y_test, y_test_pred)
-
-            report[list(models.keys())[i]] = test_model_score
+            report[name] = {
+                "model": best_model,
+                "r2_score": r2_score(y_test, y_pred)
+            }
 
         return report
     
