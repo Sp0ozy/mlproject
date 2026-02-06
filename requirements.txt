@@ -1,2 +1,7 @@
-setuptools==80.10.2
--e .
+flask
+gunicorn
+pandas
+numpy
+scikit-learn
+xgboost
+dill
